@@ -10,7 +10,7 @@ const Friends = () => {
         <section className='friend-list'>
             <div className='number-of-friends'>
                 <h4>Friends</h4>
-                <span>{friends.length}</span>
+                <span>{friends && friends.length}</span>
             </div>
             {friends && friends.map(friend => {
                 return (

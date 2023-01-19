@@ -19,6 +19,10 @@ function App() {
   useEffect(() =>{
     if(user){
       dispatch(requestUserInfo(user.uid))
+      console.log(user.uid)
+      console.log(user.email)
+      console.log(user.displayName)
+      console.log(user.photoURL)
     }
   },[user, dispatch])
 

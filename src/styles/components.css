@@ -2,109 +2,112 @@
 /* Login & Sign Up */
 label {
     font-size: 1rem;
-  }
+}
   
-  input {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    padding: 0.5rem;
-    outline: none;
-    background-color: var(--bg-color);
-    border: none;
-    color: var(--white);
-  }
-  
-  .btn {
-    margin: 1rem 0;
-    padding: 0.5rem 0.75rem;
-    font-size: 1.25rem;
-    color: white;
-    background-color: var(--primary-color);
-    border: none;
-    transition: background-color 0.25s linear;
-  }
-  
-  .btn:is(:hover, :focus):not(:disabled) {
-    cursor: pointer;
-    background-color: var(--darker-primary-color);
-  }
-  
-  .btn-secondary {
-    margin: 0;
-    background-color: var(--secondary-color);
-  }
+input {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  padding: 0.5rem;
+  outline: none;
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--white);
+  width: 100%;
+  box-sizing: border-box;
+}
 
-  .input-label {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 0.5rem;
-  }
-  
-  .input-label span{
-    flex: 6;
-    font-size: 0.75rem;
-    text-align: right;
-  }
-  
-  .input-form {
-    color: var(--white);
-    background-color: var(--bg-lighter);
-    width: 400px;
-    animation-name: fadeIn;
-    animation-duration: 1s;
-  }
-  
-  .input-form span {
-    color: var(--primary-color-2);
-    cursor: pointer;
-  }
-  
-  .input-form span:hover {
-    text-decoration: underline;
-  }
-  
-  .input-form label::after {
-    content: "*";
-    color: var(--secondary-color)
-  }
-  
-  
-  @keyframes fadeIn {
-    0% { opacity: 0}
-    100% { opacity: 1;}
-  }
-  
-  .signin-form {
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-  }
-  
-  .top-section {
-    color: var(--white);
-    background-color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  
-  .top-section h1 {
-    margin: 0;
-    font-weight: 600;
-  }
-  
-  .error {
-    padding: 0 2rem 2rem 2rem;
-  }
-  
-  .error h2 {
-    margin: 0;
-  }
-  
-  .error-text {
-    color: var(--secondary-color);
-  }
+.btn {
+  margin: 1rem 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.25rem;
+  color: white;
+  background-color: var(--primary-color);
+  border: none;
+  transition: background-color 0.25s linear;
+}
+
+.btn:is(:hover, :focus):not(:disabled) {
+  cursor: pointer;
+  background-color: var(--darker-primary-color);
+}
+
+.btn-secondary {
+  margin: 0;
+  background-color: var(--secondary-color);
+}
+
+.input-label {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.input-label span{
+  flex: 6;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.input-form {
+  color: var(--white);
+  background-color: var(--bg-lighter);
+  width: 400px;
+  animation-name: fadeIn;
+  animation-duration: 1s;
+}
+
+.input-form span {
+  color: var(--primary-color-2);
+  cursor: pointer;
+}
+
+.input-form span:hover {
+  text-decoration: underline;
+}
+
+.input-form label::after {
+  content: "*";
+  color: var(--secondary-color)
+}
+
+
+@keyframes fadeIn {
+  0% { opacity: 0}
+  100% { opacity: 1;}
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.top-section {
+  color: var(--white);
+  background-color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.top-section h1 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.error {
+  padding: 0 2rem 2rem 2rem;
+}
+
+.error h2 {
+  margin: 0;
+}
+
+.error-text {
+  color: var(--secondary-color);
+}
 
 /* Home */
 .home {
@@ -125,6 +128,12 @@ label {
     color: var(--white);
     flex: 4;
     border-right: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+@media all and (max-width: 480px) { 
+  .navigation {
+    display: none;
+  }
 }
 
 .profile {
@@ -213,17 +222,18 @@ i {
 /* Chat room */
 
 .empty-chat-room {
-  height: 95vh;
   flex: 8;
   background-color: var(--bg-lighter);
+  height: 95vh;
 }
 
 .chat-room {
-    display: flex;
-    flex-direction: column;
-    flex: 8;
-    color: var(--white);
-    max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  flex: 8;
+  color: var(--white);
+  max-height: 95vh;
+  height: 100%;
 }
 
 .recipient {

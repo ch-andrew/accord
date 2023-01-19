@@ -32,15 +32,15 @@ function ChatRoom(){
         <h2>{recipient}</h2>
         <div className="actions">
           {
-            friends.includes(recipient[0]) ? 
+            friends && friends.includes(recipient[0]) ? 
             <i className="fa-solid fa-user-minus danger" onClick={() => dispatch(requestRemoveFriend({from: username, username: recipient[0]}))}></i> : 
             <i className="fa-solid fa-user-plus primary" onClick={() => dispatch(requestAddFriend({from: username, username: recipient[0]}))}></i>
           }
-          {
-            blocked.includes(recipient[0]) ? 
+          {/* {
+            blocked && blocked.includes(recipient[0]) ? 
             <h4>blocked</h4> : 
             <i className="fa-solid fa-ban danger"></i>
-          }
+          } */}
         </div>
       </section>
       <section className='conversation'>
@@ -85,7 +85,7 @@ function Messages({ msg, username, currentConversation, createdAt }){
   const messageClass = from === username ? 'sent' : 'received'
 
   const onDeleteMessage = (messageID) => {
-    dispatch(deleteMessage({currentConversation, messageID, username}))
+    // dispatch(deleteMessage({currentConversation, messageID, username}))
   }
 
   return (

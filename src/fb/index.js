@@ -215,7 +215,7 @@ export const getConversation = async (user, member) => {
   // Single conversation between current user and another user
   // from is current user 
   // 
-  const q1 = query(chatRef, where('members', 'array-contains', (user, member)))
+  const q1 = query(chatRef, where('members', 'array-contains', [user, member]))
   const conversation = await getDocs(q1)
   .then(({ docs }) => {
       let convos = []
@@ -228,8 +228,9 @@ export const getConversation = async (user, member) => {
 }
 
 export const addConversation = async (sender, recipient) => {
-  console.log(recipient);
+  console.log(sender, recipient);
   const response = await checkUsername(recipient)
+  console.log(response);
   if(!response){
     return {
       error: 'User not found!'
@@ -254,8 +255,6 @@ export const addConversation = async (sender, recipient) => {
     const newConversation = newConversations.filter(convo => {
       return convo.members.includes(sender && recipient)
     })
-    console.log(newConversation);
-    console.log(newConversations);
     return {
       conversations : newConversations,
       conversation: newConversation
