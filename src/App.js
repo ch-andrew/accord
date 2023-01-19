@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from './fb';
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
+import Home from './components/Home';
+import Loading from './components/Loading';
+import { requestUserInfo } from './redux/userReducer';
 import './App.css';
 
+
 function App() {
+  const [user, loading, error] = useAuthState(auth)
+  const [showComponent, setComponent] = useState('login')
+
+  const dispatch = useDispatch()
+
+  useEffect(() =>{
+    if(user){
+      dispatch(requestUserInfo(user.uid))
+    }
+  },[user, dispatch])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      {loading && <Loading />}
+      {!loading && showComponent === 'login' && !user && <LoginForm stateFn={setComponent}/>}
+      {!loading && showComponent === 'signup' && !user && <SignUpForm stateFn={setComponent}/>}
+      {error && <h1>{error}</h1>}
+      {user && <Home />}
     </div>
   );
 }
