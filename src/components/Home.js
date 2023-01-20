@@ -3,10 +3,10 @@ import '../styles/components.css'
 import LogoutButton from './LogoutButton';
 import ChatRoom from './ChatRoom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addConversationAction, conversationListRequest, viewConversation } from '../redux/conversationReducer';
+import { addConversationAction, conversationListRequest} from '../redux/conversationReducer';
 import Conversations from './Conversations';
 import Friends from './Friends';
-import { queryTest } from '../fb';
+// import { queryTest } from '../fb';
 import FriendRequests from './FriendRequests';
 
 function Home() {
@@ -16,7 +16,7 @@ function Home() {
   const { conversations, currentConversation, error: conversationsError } = convo
 
   const userInfo = useSelector((state) => state.user)
-  const { username, friendRequests, friends } = userInfo
+  const { username } = userInfo
 
   const [ modal, showModal ] = useState(false)
   const [ recipient, setRecipient ] = useState('')
@@ -24,17 +24,18 @@ function Home() {
   const [ tab, showTab ] = useState('conversations')
 
   useEffect(() => {
-     dispatch(conversationListRequest(username))
+    dispatch(conversationListRequest(username))
   }, [username, dispatch, currentConversation, modal])
 
   const onAddConversation = () => {
+    console.log(username, recipient);
     dispatch(addConversationAction({username: username, recipient}))
   }
 
   return ( 
     <div className='home'>
 
-      <div className='navigation'>
+      <div className={`navigation ${currentConversation && 'mobile-view'}`}>
         <section className='profile'>
           {username && <h2>{username}</h2>}
           <LogoutButton element='text'/>
@@ -47,7 +48,7 @@ function Home() {
         </section>
         { tab === 'requests' && <FriendRequests/>}
         {tab === 'conversations' && <Conversations/>}
-        {/* <button className='btn' onClick={() => queryTest()}>Test</button> */}
+        {/* <button className='btn' onClick={() => queryTest('johnsmith', 'chandrew')}>Test</button> */}
       </div>
 
       { conversations.length > 0 && currentConversation ?
@@ -57,7 +58,10 @@ function Home() {
       {
         modal &&
         <section className='modal'>
-          <h2>Start a conversation</h2>
+          <div className='title'>
+            <i className='fa-solid fa-arrow-left mobile-icon' onClick={() => showModal(false)}></i>
+            <h2>Start a conversation</h2>
+          </div>
           <div className='search-bar'>
             <input id='username' type='text' name='username' placeholder='Username' onChange={(e) => setRecipient(e.target.value)}/>
             <button className='btn' onClick={() => onAddConversation()}>Start</button>

@@ -89,7 +89,7 @@ export const conversationListSlice = createSlice({
                 if(error) state.error = error
                 else {
                     state.conversations = conversations
-                    state.currentConversation = conversation[0].id
+                    state.currentConversation = conversation.id
                     state.error = null
                 }
             })

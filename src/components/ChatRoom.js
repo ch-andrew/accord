@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage, deleteMessage } from "../redux/conversationReducer";
+import { addMessage } from "../redux/conversationReducer";
 import { requestAddFriend, requestRemoveFriend } from "../redux/userReducer";
+import { viewConversation } from '../redux/conversationReducer';
 
 
 function ChatRoom(){
@@ -11,7 +12,7 @@ function ChatRoom(){
   const { conversations, currentConversation } = convo
 
   const userInfo = useSelector((state) => state.user)
-  const { username, friends, blocked, info } = userInfo
+  const { username, friends } = userInfo
 
   const arrConversation = conversations.filter(convo => {
     return convo.id === currentConversation
@@ -26,8 +27,9 @@ function ChatRoom(){
   const messages = conversation.messages
 
   return (
-    <div className='chat-room'>
+    <div className={`chat-room ${!currentConversation && 'mobile-view'}`}>
       <section className='recipient'>
+        <i className='fa-solid fa-arrow-left mobile-icon' onClick={() => dispatch(viewConversation())}></i>
         <img className="recipient-photo" src="https://i.stack.imgur.com/l60Hf.png" alt="recipient profile pic"/>
         <h2>{recipient}</h2>
         <div className="actions">
@@ -80,7 +82,7 @@ function SendMessage({ currentConversation, username }){
 
 
 function Messages({ msg, username, currentConversation, createdAt }){
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const { from, message } = msg
   const messageClass = from === username ? 'sent' : 'received'
 

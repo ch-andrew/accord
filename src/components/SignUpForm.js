@@ -43,7 +43,7 @@ function SignUpForm ({ stateFn }){
     return (
       <section className='input-form'>
         <div className='top-section'>
-            <h1>Welcome to Accord</h1>
+            <h1>Accord</h1>
         </div>
         <form className='signin-form'>
             <h2>Create an account</h2>

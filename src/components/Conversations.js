@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import '../styles/components.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { viewConversation } from '../redux/conversationReducer';

@@ -1,10 +1,17 @@
 import '../styles/components.css'
 import { useDispatch, useSelector } from 'react-redux';
+import { addConversationAction } from '../redux/conversationReducer';
 
 const Friends = () => {
+    const dispatch = useDispatch()
   
     const userInfo = useSelector((state) => state.user)
-    const { friends } = userInfo
+    const { username, friends } = userInfo
+
+    const onAddFriendsConversation = (recipient) => {
+        console.log(username, recipient);
+        dispatch(addConversationAction({username: username, recipient}))
+    }
 
     return (
         <section className='friend-list'>
@@ -14,7 +21,7 @@ const Friends = () => {
             </div>
             {friends && friends.map(friend => {
                 return (
-                    <div key={friend}>{friend}</div>
+                    <div key={friend} onClick={() => onAddFriendsConversation(friend)}>{friend}</div>
                 )
             })}
         </section>

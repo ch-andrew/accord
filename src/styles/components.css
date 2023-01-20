@@ -89,12 +89,13 @@ input {
   align-items: center;
   text-align: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .top-section h1 {
   margin: 0;
   font-weight: 600;
+  font-family: 'Bungee';
 }
 
 .error {
@@ -113,17 +114,20 @@ input {
 .home {
     display: flex;
     position: relative;
+    align-items: stretch;
     justify-content: center;
     width: 100%;
     max-width: 1440px;
-}
+    height: 100vh;
+  }
 
 .home h2 {
-    margin: 0;
+  margin: 0;
 }
 /* Chat */
 .navigation {
     display: flex;
+    align-items: stretch;
     flex-direction: column;
     color: var(--white);
     flex: 4;
@@ -131,7 +135,7 @@ input {
 }
 
 @media all and (max-width: 480px) { 
-  .navigation {
+  .navigation.mobile-view{
     display: none;
   }
 }
@@ -157,6 +161,16 @@ i {
   cursor: pointer;
 }
 
+.mobile-icon {
+  display: none;
+}
+
+@media all and (max-width: 480px) { 
+  .mobile-icon{
+    display: initial;
+  }
+}
+
 .conversations-list {
   display: flex;
   flex-direction: column;
@@ -177,11 +191,11 @@ i {
 }
 
 .conversations-list div:active{
-  background-color: var(--primary-color);
+  background-color: var(--darker-primary-color);
 }
 
 .conversation-active, .conversation-active:hover{
-  background-color: var(--darker-primary-color);
+  background-color: var(--primary-color);
 }
 
 .conversations-list img,
@@ -224,7 +238,6 @@ i {
 .empty-chat-room {
   flex: 8;
   background-color: var(--bg-lighter);
-  height: 95vh;
 }
 
 .chat-room {
@@ -232,8 +245,15 @@ i {
   flex-direction: column;
   flex: 8;
   color: var(--white);
-  max-height: 95vh;
-  height: 100%;
+}
+
+@media all and (max-width: 480px) { 
+  .empty-chat-room {
+    display: none;
+  }
+  .chat-room.mobile-view {
+    display: none;
+  }
 }
 
 .recipient {
@@ -257,7 +277,7 @@ i {
 
 .recipient .actions {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   flex: 1;
   gap: 1rem;
@@ -281,9 +301,10 @@ i {
   flex-direction: column-reverse;
   gap: 1rem;
   padding: 1rem;
-  height: 80vh;
   overflow-y: scroll;
   background-color: var(--bg-color);
+  height: auto;
+  flex: 8;
 }
 
 .message {
@@ -356,10 +377,30 @@ i {
   background-color: var(--bg-lighter);
   box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.25);
   height: 50vh;
-  width: 75vh;
+  width: 50vw;
   padding: 1rem;
   z-index: 2;
 }
+
+.modal .title{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.modal .title i{
+  font-size: 1.5rem;
+}
+
+@media all and (max-width: 480px) { 
+  .modal{
+    height: 100%;
+    width: 100%;
+  }
+}
+
 
 .modal-bg {
   display: flex;
@@ -371,10 +412,6 @@ i {
 .modal-bg {
   height: 100vh;
   width: 100%;
-}
-
-.modal h2 {
-  margin-bottom: 0.5rem;
 }
 
 .modal .search-bar {
@@ -417,7 +454,7 @@ i {
 }
 
 .tab h4.active {
-  background-color: var(--secondary-color);
+  background-color: var(--darker-primary-color);
 }
 
 /* Friends */

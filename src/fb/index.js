@@ -7,7 +7,9 @@ import {
   doc, 
   getDocs, 
   // getDoc, 
-  addDoc, query, where, orderBy, serverTimestamp, deleteDoc, onSnapshot, getDoc, updateDoc, arrayUnion, arrayRemove 
+  addDoc, query, where, orderBy, serverTimestamp, deleteDoc, 
+  // onSnapshot, getDoc, 
+  updateDoc, arrayUnion, arrayRemove 
 } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword ,signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
@@ -88,6 +90,7 @@ export const signup = (email, password, username) => {
           authID: cred.user.uid,
         }
       )
+      // addConversation('chandrew', username)
       return {
         data: cred.user,
         error: null
@@ -211,19 +214,26 @@ export const removeMessage = async (conversationID, messageID, from) => {
   return newConversations
 }
 
-export const getConversation = async (user, member) => {
+export const getConversation = async (user, anotherUser) => {
   // Single conversation between current user and another user
-  // from is current user 
-  // 
-  const q1 = query(chatRef, where('members', 'array-contains', [user, member]))
+  const members = [user, anotherUser]
+  const q1 = query(chatRef, where('members', 'array-contains', user))
   const conversation = await getDocs(q1)
   .then(({ docs }) => {
       let convos = []
       docs.forEach(doc => {
-        convos.push({ ...doc.data(), id: doc.id})
+        const conversations = doc.data().members
+        const success = members.every((val) => {
+          return conversations.includes(val)
+        })
+        
+        if(success){
+          convos.push({ ...doc.data(), id: doc.id})
+        }
       })
-      return convos
+      return convos[0]
     })
+  console.log(conversation);
   return conversation
 }
 
@@ -238,7 +248,7 @@ export const addConversation = async (sender, recipient) => {
   }
   const existingConversation = await getConversation(sender, recipient)
   const newConversations = await getAllConversations(sender)
-  if(existingConversation.length > 0){
+  if(existingConversation){
   return { 
     conversations: newConversations, 
     conversation: existingConversation}
@@ -291,7 +301,9 @@ export const removeFriend = async (user, friend) => {
     friends: arrayRemove(user)
   })
 
-  return 'Friend removed'
+  const newUserInfo = await getUserInfoByUsername(user)
+
+  return newUserInfo
 }
 
 export const handleFriendRequest = async (action, user, username) => {
@@ -329,5 +341,23 @@ export const handleFriendRequest = async (action, user, username) => {
 }
 
 export const queryTest = async (user, username) => {
+  const members = [user, username]
+  const q1 = query(chatRef, where('members', 'array-contains', user))
+  const conversation = await getDocs(q1)
+  .then(({ docs }) => {
+      let convos = []
+      docs.forEach(doc => {
+        const conversations = doc.data().members
+        const success = members.every((val) => {
+          return conversations.includes(val)
+        })
 
+        if(success){
+          convos.push({ ...doc.data(), id: doc.id})
+        }
+      })
+      return convos[0]
+    })
+  console.log(conversation);
+  return conversation
 }

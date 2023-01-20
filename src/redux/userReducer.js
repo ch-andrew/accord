@@ -79,7 +79,9 @@ export const userSlice = createSlice({
                 state.info = ''
             })
             .addCase(requestRemoveFriend.fulfilled, (state, action) => {
-                state.info = action.payload
+                state.info = 'Friend removed'
+                state.friends = action.payload.friends
+                state.friendRequests = action.payload.friendRequests
             })
             .addCase(acceptFriendRequest.pending, (state) => {
                 state.info = ''
