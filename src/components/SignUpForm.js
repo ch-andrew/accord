@@ -1,8 +1,15 @@
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { signup } from "../fb"
 import '../styles/components.css'
+import { addConversationAction, addMessage } from "../redux/conversationReducer"
+import { queryTest } from "../fb"
 
 function SignUpForm ({ stateFn }){
+    const dispatch = useDispatch()
+    const convo = useSelector((state) => state.conversationList)
+    const { currentConversation } = convo
+
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState('')
     const [password, setPassword] = useState('')
@@ -33,11 +40,38 @@ function SignUpForm ({ stateFn }){
         }
     }
 
+    const newConversation = async () => {
+        dispatch(addConversationAction({username, recipient: 'chandrew'}))
+        return true
+    }
+
+    const sendWelcomeMessage = async () => {
+        dispatch(addMessage({currentConversation, message: `Hi ${username}, Welcome to Accord!`, username: 'chandrew', to: username}))
+        dispatch(addMessage({
+            currentConversation, 
+            message: 
+                `My name is Andrew and I am the developer of this chat web app. You can talk and ask me about anything in here. 
+                If you'd like to know more about me, you can visit my website at https://chandrew.gatsbyjs.io/ `, 
+            username: 'chandrew',
+            to: username}))
+    }
+
+    const testMessage = async (e) => {
+        e.preventDefault()
+        const { error } = await signup(email, password, username)
+        if(error){
+            setError(error)
+        }
+        const response = await newConversation()
+
+    }
+
     const onSignUp = async () => {
         const { error } = await signup(email, password, username)
         if(error){
-            await setError(error)
+            setError(error)
         }
+        newConversation()
     }
   
     return (
@@ -70,11 +104,12 @@ function SignUpForm ({ stateFn }){
                 <input type='submit' value='Register' className='btn' onClick={e => validateForm(e)}/> :
                 <input type='submit' value='Register' className='btn' disabled/> 
             }
+            <button className='btn' onClick={(e) => testMessage(e)}>Test</button>
             <span onClick={() => stateFn('login')}>Already have an account?</span>
         </form>
         {error && (
             <div className='error'>
-                <h3>{error}</h3>
+                <p className="danger">{error}</p>
             </div>
         )}
       </section>

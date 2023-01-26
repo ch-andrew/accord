@@ -86,11 +86,10 @@ export const signup = (email, password, username) => {
     .then((cred) => {
       console.log('user registered', cred.user.uid);
       addDoc(usersRef, {
-          username,
+          username: username.toLowerCase(),
           authID: cred.user.uid,
         }
       )
-      // addConversation('chandrew', username)
       return {
         data: cred.user,
         error: null
@@ -103,11 +102,11 @@ export const signup = (email, password, username) => {
         error: err.message
       }
     })
-    return response
+  return response
 }
 
 export const checkUsername = async (username) => {
-  const q1 = query(usersRef, where('username', '==', username))
+  const q1 = query(usersRef, where('username', '==', username.toLowerCase()))
   const user = await getDocs(q1)
     .then(({ docs }) => {
       if(docs.length > 0){
@@ -122,6 +121,14 @@ export const checkUsername = async (username) => {
 
 // Firebase Auth => Firestore
 export const getUserInfo = async (authID) => {
+  const user = auth.currentUser;
+  let email
+
+  if (user !== null) {
+    // The user object has basic properties such as display name, email, etc.
+    email = user.email;
+  }
+
   const q1 = query(usersRef, where('authID', '==', authID))
   const userInfo = await getDocs(q1)
     .then(({ docs }) => {
@@ -132,7 +139,10 @@ export const getUserInfo = async (authID) => {
         }
     })
 
-  return userInfo
+  return {
+    ...userInfo,
+    email
+  }
 }
 
 // Firebase Firestore => Firestore
@@ -140,11 +150,14 @@ export const getUserInfoByUsername = async (username) => {
   const q1 = query(usersRef, where('username', '==', username))
   const userInfo = await getDocs(q1)
     .then(({ docs }) => {
-        console.log(docs[0].data());
+        // console.log(docs[0].data());
         return {
           ...docs[0].data(), 
           id: docs[0].id
         }
+    })
+    .catch((err) => {
+      console.log(err);
     })
 
   return userInfo
@@ -186,23 +199,50 @@ export const getAllConversations = async (username) => {
   // Conversations + messages for current user
   let responses = []
   const conversations = await getConversations(username)
-  for(const conversation of conversations){
+  
+  for (const conversation of conversations){
+    const { members } = conversation
     const messages = await getMessages(conversation.id)
-    responses.push({...conversation, messages})
+    let recipients = []
+    let status 
+    for await(const member of members){
+      if(member !== username){
+        const userInfo = await getUserInfoByUsername(member)
+        status = userInfo.status ? userInfo.status : ''
+        if(userInfo && userInfo.displayName){
+          recipients.push({name: userInfo.displayName, status})
+        }
+        else {
+          recipients.push({name: member})
+        }
+      }
+    }
+    responses.push({...conversation, messages, recipients})
   }
   return responses
 }
 
-export const sendMessage = async (conversationID, message, from) => {
+export const sendMessage = async (conversationID, message, from, to) => {
   // from is current user who is sending message
+  console.log(conversationID, message, from, to)
   const messagesRef = collection(db, 'conversations', conversationID, 'messages')
   await addDoc(messagesRef, {
     message,
     from,
     createdAt: serverTimestamp()
   })
-  const newConversations = await getAllConversations(from)
-  return newConversations
+
+  if(from === to || !to){
+    console.log(!to);
+    console.log(from === to);
+    const newConversations = await getAllConversations(from)
+    return newConversations
+  }
+
+  else{
+    const newConversations = await getAllConversations(to)
+    return newConversations
+  }
 }
 
 export const removeMessage = async (conversationID, messageID, from) => {
@@ -233,12 +273,10 @@ export const getConversation = async (user, anotherUser) => {
       })
       return convos[0]
     })
-  console.log(conversation);
   return conversation
 }
 
 export const addConversation = async (sender, recipient) => {
-  console.log(sender, recipient);
   const response = await checkUsername(recipient)
   console.log(response);
   if(!response){
@@ -258,13 +296,14 @@ export const addConversation = async (sender, recipient) => {
     await addDoc(chatRef, {
       members: [sender, recipient]
     }).then((res) => {
-      console.log('response', res);
-      return res
+      console.log('response', res.data());
     })
+
     const newConversations = await getAllConversations(sender)
     const newConversation = newConversations.filter(convo => {
       return convo.members.includes(sender && recipient)
     })
+    
     return {
       conversations : newConversations,
       conversation: newConversation
@@ -336,28 +375,46 @@ export const handleFriendRequest = async (action, user, username) => {
     newUserInfo = await getUserInfoByUsername(user)
     return newUserInfo
   }
-  console.log('me too?');
   return newUserInfo
 }
 
-export const queryTest = async (user, username) => {
-  const members = [user, username]
-  const q1 = query(chatRef, where('members', 'array-contains', user))
-  const conversation = await getDocs(q1)
-  .then(({ docs }) => {
-      let convos = []
-      docs.forEach(doc => {
-        const conversations = doc.data().members
-        const success = members.every((val) => {
-          return conversations.includes(val)
-        })
+export const queryTest = async (username) => {
+  const userInfo = await getUserInfoByUsername(username)
+  const userRef = doc(usersRef, userInfo.id)
 
-        if(success){
-          convos.push({ ...doc.data(), id: doc.id})
-        }
-      })
-      return convos[0]
+  await updateDoc(userRef, {
+    displayName: 'Andrew'
+  })
+
+  const newUserInfo = await getUserInfoByUsername(username)
+  console.log(newUserInfo);
+  return newUserInfo
+}
+
+
+export const updateUserProfile = async (username, query, data) => {
+  const userInfo = await getUserInfoByUsername(username)
+  const userRef = doc(usersRef, userInfo.id)
+
+  if(query === 'displayName'){
+    await updateDoc(userRef, {
+      displayName: data
     })
-  console.log(conversation);
-  return conversation
+  }
+
+  if(query === 'status'){
+    await updateDoc(userRef, {
+      status: data
+    })
+  }
+
+  const newUserInfo = await getUserInfoByUsername(username)
+  return newUserInfo
+}
+
+export const welcomeMessage = async (username) => {
+  const newConversation = await addConversation('chandrew', username)
+  const { conversation } = newConversation
+  const newConversations = await sendMessage(conversation.id, `Hi ${username}, Welcome to Accord!`, 'chandrew')
+  return newConversations
 }

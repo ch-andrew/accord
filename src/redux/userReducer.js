@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUserInfo, handleFriendRequest, removeFriend, sendFriendRequest } from "../fb"
+import { getUserInfo, handleFriendRequest, removeFriend, sendFriendRequest, updateUserProfile } from "../fb"
 
 const initialState = {
     username: '',
+    displayName: '',
+    email: '',
     friends: [],
     friendRequests: [],
     blocked: [],
-    info: ''
+    info: '',
+    loading: false
 }
 
 export const requestUserInfo = createAsyncThunk(
@@ -50,6 +53,14 @@ export const declineFriendRequest = createAsyncThunk(
     }
 )
 
+export const updateProfileRequest = createAsyncThunk(
+    'user/updateProfile',
+    async ({username, query, data}) => {
+        const response = await updateUserProfile(username, query, data)
+        return response
+    }
+)
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
@@ -64,10 +75,13 @@ export const userSlice = createSlice({
                 state.username = ''
             })
             .addCase(requestUserInfo.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.username = action.payload.username
+                state.displayName = action.payload.displayName
+                state.email = action.payload.email
                 state.friends = action.payload.friends
                 state.friendRequests = action.payload.friendRequests
+                state.about = action.payload.about
+                state.status = action.payload.status
             })
             .addCase(requestAddFriend.pending, (state) => {
                 state.info = ''
@@ -98,6 +112,18 @@ export const userSlice = createSlice({
                 state.info = 'Friend request declined'
                 state.friends = action.payload.friends
                 state.friendRequests = action.payload.friendRequests
+            })
+            .addCase(updateProfileRequest.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(updateProfileRequest.fulfilled, (state, action) => {
+                state.username = action.payload.username
+                state.displayName = action.payload.displayName
+                state.email = action.payload.email
+                state.friends = action.payload.friends
+                state.friendRequests = action.payload.friendRequests
+                state.about = action.payload.about
+                state.status = action.payload.status
             })
     }
 })

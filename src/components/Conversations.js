@@ -17,9 +17,16 @@ const Conversations = () => {
             const chatName = conversation.members.filter(member => {return member !== username})
             const selected = currentConversation === conversation.id ? 'conversation-active' : ''
             return (
-              <div className={selected} key={conversation.id} onClick={() => dispatch(viewConversation(conversation.id))}>
+              <div className={`conversation-list ${selected}`} key={conversation.id} onClick={() => dispatch(viewConversation(conversation.id))}>
                 <img className="recipient-photo" src="https://i.stack.imgur.com/l60Hf.png" alt="profile pic"/>
-                <h2>{conversation.name ? conversation.name : chatName[0]}</h2>
+                <div className='details'>
+                  <h2>{conversation.name ? conversation.name : conversation.recipients[0].name}</h2>
+                  
+                  {conversation.messages.length > 0 && (
+                    // <p>{conversation.messages[0].from}: {conversation.messages[0].message}</p>
+                    <p>{conversation.messages[0].message}</p>
+                  )}
+                </div>
               </div>
             )
           })}

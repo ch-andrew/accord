@@ -4,7 +4,7 @@ label {
     font-size: 1rem;
 }
   
-input {
+input, textarea {
   margin-bottom: 1rem;
   font-size: 1rem;
   padding: 0.5rem;
@@ -14,6 +14,10 @@ input {
   color: var(--white);
   width: 100%;
   box-sizing: border-box;
+}
+
+textarea {
+  margin: 0;
 }
 
 .btn {
@@ -32,8 +36,20 @@ input {
 }
 
 .btn-secondary {
-  margin: 0;
+  margin: 0 auto;
   background-color: var(--secondary-color);
+}
+
+.btn.btn-danger {
+  margin: 0;
+  background-color: var(--danger-color);
+  transition: none;
+  width: 200px;
+}
+
+.btn.btn-danger:hover {
+  cursor: pointer;
+  background-color: var(--danger-color);
 }
 
 .input-label {
@@ -119,6 +135,7 @@ input {
     width: 100%;
     max-width: 1440px;
     height: 100vh;
+    overflow: hidden;
   }
 
 .home h2 {
@@ -138,14 +155,20 @@ input {
   .navigation.mobile-view{
     display: none;
   }
+
+  .navigation {
+    border: none;
+  }
 }
 
 .profile {
     display: flex;
+    flex-direction: row;
     align-items: center;
     padding: 1rem;
     gap: 0.75rem;
     background-color: var(--bg-lighter);
+    height: 6rem;
 }
 
 .profile a {
@@ -153,6 +176,19 @@ input {
     text-align: right;
     cursor: pointer;
     color: var(--secondary-color);
+}
+
+.profile h2 {
+  font-size: 1rem;
+}
+
+.profile h2:hover {
+  cursor: pointer;
+}
+
+.profile i {
+  font-size: 1.5rem;
+  margin-left: auto;
 }
 
 i {
@@ -175,9 +211,11 @@ i {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
+  height: auto;
 }
 
-.conversations-list div {
+.conversations-list .conversation-list {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -186,11 +224,11 @@ i {
   padding: 1rem;
 }
 
-.conversations-list div:is(:hover):not(.conversation-active){
+.conversations-list .conversation-list:is(:hover):not(.conversation-active){
   background-color: var(--bg-lighter);
 }
 
-.conversations-list div:active{
+.conversations-list .conversation-list:active{
   background-color: var(--darker-primary-color);
 }
 
@@ -204,6 +242,36 @@ i {
   height: 2rem;
   background-color: var(--bg-color);
   border-radius: 50%;
+}
+
+.conversations-list .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  cursor: pointer;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-list {
+  height: 6rem;
+  max-width: 100vw;
+}
+
+.conversation-list .details h2, .profile h2, .recipient h2 {
+  font-weight: 700;
+}
+
+.conversation-list .details span, .profile span, .recipient span {
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+.conversation-list .details p {
+  color: var(--neutral-lighter);
 }
 
 .friend-requests .request{
@@ -262,6 +330,7 @@ i {
   padding: 1rem;
   gap: 0.75rem;
   background-color: var(--bg-lighter);
+  height: 6rem;
 }
 
 .recipient img {
@@ -271,28 +340,37 @@ i {
   border-radius: 50%;
 }
 
-.recipient h2 {
+.recipient .details {
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  width: 200px;
+}
+
+@media all and (max-width: 480px) { 
+  .recipient {
+    padding: 0.5rem;
+  }
+
+  .recipient .details h2 {
+    font-size: 1rem;
+  }
+
+  .recipient .details h2 span {
+    font-size: 0.75rem;
+  }
+
+    .recipient .details p {
+    font-size: 0.75rem;
+  }
 }
 
 .recipient .actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
   gap: 1rem;
-}
-
-.primary {
-  color: var(--primary-color);
-}
-
-.success {
-  color: var(--success-color);
-}
-
-.danger {
-  color: var(--danger-color);
 }
 
 /* Conversation */
@@ -376,8 +454,8 @@ i {
   color: var(--white);
   background-color: var(--bg-lighter);
   box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.25);
-  height: 50vh;
-  width: 50vw;
+  height: 55vh;
+  width: 35vw;
   padding: 1rem;
   z-index: 2;
 }
@@ -386,6 +464,7 @@ i {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   margin-bottom: 1rem;
   gap: 1rem;
 }
@@ -398,6 +477,10 @@ i {
   .modal{
     height: 100%;
     width: 100%;
+  }
+
+  .modal .title {
+    justify-content: initial;
   }
 }
 
@@ -463,10 +546,118 @@ i {
   flex-direction: column;
 }
 
+.friend-list div {
+  display: flex;
+}
+
+.friend-list p {
+  margin-right: auto;
+}
+
+.friend-list p:hover {
+  cursor: pointer;
+  color: var(--primary-color-2);
+}
+
 .number-of-friends {
   display: flex;
   margin-bottom: 1rem;
   color: var(--neutral-color);
   gap: 0.5rem;
   border-bottom: 1px solid;
+}
+
+.notifications {
+  color: var(--primary-color);
+}
+
+.modal-profile {
+  flex-direction: column;
+}
+
+.modal-profile .user-profile {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.modal-profile span {
+  margin: 0 auto;
+}
+
+.profile-photo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+
+.display-name {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  height: 4rem;
+}
+
+.status {
+  display: flex;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  height: 7.5rem;
+  max-width: 100%;
+}
+
+.modal-profile .btn.btn-danger {
+  margin: 0 auto;
+}
+
+.edit.display-name,
+.edit.status {
+  flex-direction: column;
+}
+
+.edit.display-name .actions,
+.edit.status .actions {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.edit.display-name .actions p,
+.edit.status .actions p {
+  margin-right: auto;
+}
+
+
+.primary {
+  color: var(--primary-color);
+}
+
+.secondary {
+  color: var(--secondary-color);
+}
+
+.success {
+  color: var(--success-color);
+}
+
+.danger {
+  color: var(--danger-color);
+}
+
+.neutral {
+  color: var(--neutral-color);
+}
+
+.neutral-light {
+  color: var(--neutral-lighter);
+}
+
+.bold {
+  font-weight: 700;
 }

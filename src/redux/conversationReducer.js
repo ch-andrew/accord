@@ -18,9 +18,19 @@ export const conversationListRequest = createAsyncThunk(
 
 export const addMessage = createAsyncThunk(
     'conversations/addMessage',
-    async ({currentConversation, message, username}) => {
-        const response = await sendMessage(currentConversation, message, username)
-        return response
+    async ({currentConversation, message, username, to}) => {
+        console.log(currentConversation, username, to);
+        if(to) {
+            console.log(to);
+            const response = await sendMessage(currentConversation, message, username, to)
+            return response
+        }
+
+        else {
+            console.log(to);
+            const response = await sendMessage(currentConversation, message, username)
+            return response
+        }
     }
 )
 

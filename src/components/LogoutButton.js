@@ -14,8 +14,8 @@ function LogoutButton({element}) {
   
     return (
       <>
-        {element === 'button' &&  <button className="btn btn-secondary" type='button' onClick={onLogout}>Logout</button>}
-        {element === 'text' &&  <a onClick={onLogout}>Logout</a>}
+        {element === 'button' &&  <button className="btn btn-danger" type='button' onClick={onLogout}>Logout</button>}
+        {element === 'text' &&  <span className="link danger" onClick={onLogout}>Logout</span>}
       </>
     )
 }
