@@ -104,7 +104,7 @@ function SignUpForm ({ stateFn }){
                 <input type='submit' value='Register' className='btn' onClick={e => validateForm(e)}/> :
                 <input type='submit' value='Register' className='btn' disabled/> 
             }
-            <button className='btn' onClick={(e) => testMessage(e)}>Test</button>
+            {/* <button className='btn' onClick={(e) => testMessage(e)}>Test</button> */}
             <span onClick={() => stateFn('login')}>Already have an account?</span>
         </form>
         {error && (
